@@ -1,110 +1,144 @@
-# WeatherMamba
-WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions
+# WeatherMamba_Pro
+
+Official PyTorch implementation for weather-aware LiDAR point cloud segmentation.
+
+## Table of Contents
+
+- [Highlights](#highlights)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Dataset Preparation](#dataset-preparation)
+- [Training](#training)
+- [Hyperparameter Tuning](#hyperparameter-tuning)
+- [Outputs](#outputs)
+
+## Highlights
+
+- Mamba-based architecture for point cloud segmentation.
+- Weather-aware workflow with configurable training and augmentation.
+- Config-driven pipeline with CLI overrides for fast experiments.
+
+## Project Structure
+
 ```text
 .
-├── configs/                      # Training/data/model configs (default)
+├── configs/
 │   ├── data.yaml
 │   ├── model.yaml
 │   └── train.yaml
-├── scripts/                      # Entry scripts
+├── scripts/
 │   └── train.py
-├── weathermamba/                 # Core library
+├── weathermamba/
 │   ├── __init__.py
-│   ├── cli/                      # CLI training logic
+│   ├── cli/
 │   │   ├── train.py
 │   │   └── __init__.py
-│   ├── configs/                  # In-package config copies
+│   ├── configs/
 │   │   ├── data.yaml
 │   │   ├── model.yaml
 │   │   ├── train.yaml
 │   │   └── __init__.py
-│   ├── data/                     # Dataset loading and augmentation
+│   ├── data/
 │   │   ├── augmentation.py
 │   │   ├── dataset.py
 │   │   └── __init__.py
-│   ├── engine/                   # Trainer and training loop
+│   ├── engine/
 │   │   ├── trainer.py
 │   │   └── __init__.py
-│   ├── models/                   # Model definitions
+│   ├── models/
 │   │   ├── mamba_mock.py
 │   │   ├── weather_mamba.py
 │   │   └── __init__.py
-│   └── utils/                    # Utility helpers
+│   └── utils/
 │       ├── config.py
 │       ├── runtime.py
 │       └── __init__.py
-└── requirements.txt              # Dependencies
+└── requirements.txt
 ```
-1.Clone the repository
 
+## Installation
+
+1. Clone the repository.
+
+```bash
 git clone https://github.com/<your-org>/WeatherMamba_Pro.git
 cd WeatherMamba_Pro
+```
 
-2.Create and activate environment
+2. Create and activate environment.
+
+```bash
 conda create -n weathermamba python=3.8 -y
 conda activate weathermamba
+```
 
-3.Install dependencies
+3. Install dependencies.
+
+```bash
 pip install -r requirements.txt
+```
 
-Dataset Preparation
+## Dataset Preparation
+
+Set your dataset root in `configs/data.yaml`:
+
+```yaml
 dataset_path: ""
 train_split: train
 val_split: val
+```
+
 Expected structure:
+
+```text
 <dataset_root>/
 ├── train/
-│   └── ... (recursive point cloud files)
+│   └── ...
 └── val/
-    └── ... (recursive point cloud files)
-Supported input files:
+    └── ...
+```
 
-.bin point clouds (float32, reshaped to N x 4)
-.txt point clouds (N x 4 or N x 5; the 5th column is label if present)
-For .bin samples, labels are loaded from .label files when available.
+Supported input formats:
 
-Training
-Basic training:
+- `.bin` point clouds.
+- `.txt` point clouds.
+
+## Training
+
+Basic run:
+
+```bash
 python scripts/train.py --dataset-path ./your_dataset_root
+```
 
-Dry run (sanity check only):
+Dry run:
+
+```bash
 python scripts/train.py --dataset-path ./your_dataset_root --dry-run
+```
 
-Example with common overrides:
-python scripts/train.py \
-  --dataset-path ./your_dataset_root \
-  --epochs 100 \
-  --batch-size 4 \
-  --lr 5e-4 \
-  --hidden-dim 512 \
-  --stage-depths 3,3,4
+Override common settings:
 
-Hyperparameter Tuning
-Main files to tune:
+```bash
+python scripts/train.py --dataset-path ./your_dataset_root --epochs 100 --batch-size 4 --lr 5e-4 --hidden-dim 512 --stage-depths 3,3,4
+```
 
-configs/train.yaml
-epochs, lr, weight_decay, amp, grad_clip, save_interval
+## Hyperparameter Tuning
 
-configs/data.yaml
-num_points, loading.batch_size, loading.num_workers, augmentation.*
+Main tuning files:
 
-configs/model.yaml
-hidden_dim, stage_depths, dropout, k_small, k_medium, k_large
+- `configs/train.yaml`: `epochs`, `lr`, `weight_decay`, `amp`, `grad_clip`.
+- `configs/data.yaml`: `num_points`, `loading.batch_size`, `loading.num_workers`, `augmentation`.
+- `configs/model.yaml`: `hidden_dim`, `stage_depths`, `dropout`, neighborhood sizes.
 
-Outputs
+## Outputs
+
 Training outputs are saved to:
+
+```text
 outputs/weathermamba_pro/<run_name>/
 ├── checkpoints/
 ├── model_resolved.yaml
 ├── data_resolved.yaml
 └── train_resolved.yaml
-
-Note
-Weather type is inferred from file path keywords：
-rain -> 0
-snow -> 1
-fog -> 2
-otherwise unknown_weather_index from config
-
-Default entrypoint
-scripts/train.py -> weathermamba/cli/train.py
+```
