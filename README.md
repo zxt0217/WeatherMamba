@@ -1,5 +1,5 @@
 # WeatherMamba_Pro
-
+Note: This repository contains the official implementation of our manuscript titled "WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions", which is currently submitted to The Visual Computer. If you find this code or our research helpful, we kindly urge you to cite the associated manuscript (see Citation below).
 Official PyTorch implementation for weather-aware LiDAR point cloud segmentation.
 
 ## Table of Contents
