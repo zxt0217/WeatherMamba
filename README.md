@@ -142,3 +142,29 @@ outputs/weathermamba_pro/<run_name>/
 ├── data_resolved.yaml
 └── train_resolved.yaml
 ```
+## Citation
+
+If you find WeatherMamba useful for your research, please cite our work:
+
+```bibtex
+@article{zxt2026weathermamba,
+  title={WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions},
+  author={Your Name and Others},
+  journal={The Visual Computer},
+  year={2026},
+  note={Under Review},
+  url={[https://github.com/zxt0217/WeatherMamba](https://github.com/zxt0217/WeatherMamba)}
+}
+
+### Data Acknowledgements
+
+We would like to thank the authors of the following datasets and codebases:
+
+- **[SemanticKITTI](http://www.semantic-kitti.org/)**:
+  ```bibtex
+  @inproceedings{behley2019semantickitti,
+    author = {J. Behley and M. Garbade and A. Milioto and J. Quenzel and S. Behnke and C. Stachniss and J. Gall},
+    title = {{SemanticKITTI: A Dataset for Semantic Scene Understanding of LiDAR Sequences}},
+    booktitle = {Proc. of the IEEE/CVF Conf. on Computer Vision and Pattern Recognition (CVPR)},
+    year = {2019}
+  }
