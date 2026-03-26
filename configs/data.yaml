@@ -1,0 +1,34 @@
+dataset_path: ""
+train_split: train
+val_split: val
+num_points: 32768
+ignore_index: 255
+unknown_weather_index: 3
+file_suffixes: [".bin", ".txt"]
+
+loading:
+  batch_size: 2
+  num_workers: 4
+  pin_memory: true
+
+augmentation:
+  enabled: true
+  random_rotation:
+    enabled: true
+    angle_range: [-45, 45]
+    axis: z
+    probability: 0.5
+  random_scaling:
+    enabled: true
+    scale_range: [0.8, 1.2]
+    probability: 0.5
+  random_jitter:
+    enabled: true
+    std: 0.03
+    clip: 0.05
+    probability: 0.5
+  random_flip:
+    enabled: true
+    flip_x: true
+    flip_y: true
+    probability: 0.5
