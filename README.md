@@ -167,3 +167,10 @@ We would like to thank the authors of the following datasets and codebases:
   booktitle = {Proc. of the IEEE/CVF Conf. on Computer Vision and Pattern Recognition (CVPR)},
   year = {2019}
 }
+
+## Method Overview
+
+WeatherMamba first encodes raw point features and applies MANF to aggregate multi-scale neighborhood cues and geometric statistics.  
+RADM then estimates noise confidence and refines point features, which improves robustness under adverse-weather corruption.  
+The refined tokens are processed by a hierarchical bidirectional Mamba backbone to capture long-range dependencies with efficient sequence modeling.  
+Finally, WGRG uses weather-conditioned embeddings and gated fusion to adapt features before the segmentation head predicts per-point semantic labels.
