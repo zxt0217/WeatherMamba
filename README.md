@@ -21,8 +21,8 @@ WeatherMamba is a domain-generalized LiDAR point cloud semantic segmentation fra
 
 The method is evaluated on adverse-weather domain generalization benchmarks including:
 
-- **SemanticKITTI -> SemanticSTF**
-- **SynLiDAR -> SemanticSTF**
+- **SemanticKITTI → SemanticSTF**
+- **SynLiDAR → SemanticSTF**
 
 ---
 
