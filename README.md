@@ -30,11 +30,11 @@ The method is evaluated on adverse-weather domain generalization benchmarks incl
 
 The experiments in this repository were developed and tested under the following environment:
 
-- **OS**: Ubuntu 20.04 (or your actual version)
+- **OS**: Ubuntu 20.04 
 - **Python**: 3.8
 - **PyTorch**: 2.0.1 (replace with your actual version)
 - **CUDA**: 11.8 (replace with your actual version)
-- **GPU**: NVIDIA RTX 4090 / A100 / etc. (replace with your actual GPU)
+- **GPU**: NVIDIA RTX 4090
 
 Create the environment:
 
@@ -240,9 +240,7 @@ Example:
 ```bash
 python scripts/train.py \
     --dataset-path /path/to/dataset_root \
-    --use-manf true \
-    --use-radm true \
-    --use-wgrg false
+To reproduce the ablation study, enable or disable MANF, RADM, and WGRG in `configs/model.yaml`.
 ```
 
 ## Configuration
@@ -281,7 +279,6 @@ Or specify the path directly in the testing command:
 python scripts/test.py --checkpoint /path/to/checkpoint.pth
 ```
 
-If you release checkpoints later, add the download links here.
 
 ## Notes on Reproducibility
 
