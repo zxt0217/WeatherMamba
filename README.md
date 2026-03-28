@@ -32,8 +32,8 @@ The experiments in this repository were developed and tested under the following
 
 - **OS**: Ubuntu 20.04 
 - **Python**: 3.8
-- **PyTorch**: 2.0.1 (replace with your actual version)
-- **CUDA**: 11.8 (replace with your actual version)
+- **PyTorch**: 2.0.1 
+- **CUDA**: 11.8 
 - **GPU**: NVIDIA RTX 4090
 
 Create the environment:
@@ -227,21 +227,13 @@ The following table provides a minimal guide for reproducing the main results re
 
 ### Ablation settings
 
-To reproduce the ablation study, disable/enable the corresponding modules in the model configuration:
+To reproduce the ablation study, enable or disable MANF, RADM, and WGRG in `configs/model.yaml`.
 
 - Baseline: backbone only
 - + MANF
 - + RADM
 - + WGRG
 - Full model
-
-Example:
-
-```bash
-python scripts/train.py \
-    --dataset-path /path/to/dataset_root \
-To reproduce the ablation study, enable or disable MANF, RADM, and WGRG in `configs/model.yaml`.
-```
 
 ## Configuration
 
