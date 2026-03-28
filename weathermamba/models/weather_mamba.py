@@ -495,12 +495,18 @@ class WeatherMambaSegmentationFinal(nn.Module):
         stage_depths: Sequence[int] = (2, 2, 2),
         dropout: float = 0.1,
         use_deep_supervision: bool = True,
+        use_manf: bool = True,
+        use_radm: bool = True,
+        use_wgrg: bool = True,
     ):
         super().__init__()
 
         self.num_classes = num_classes
         self.hidden_dim = hidden_dim
         self.use_deep_supervision = use_deep_supervision
+        self.use_manf = bool(use_manf)
+        self.use_radm = bool(use_radm)
+        self.use_wgrg = bool(use_wgrg)
 
         self.point_encoder = nn.Sequential(
             nn.Linear(input_dim, 64),
@@ -514,15 +520,19 @@ class WeatherMambaSegmentationFinal(nn.Module):
             nn.GELU(),
         )
 
-        self.manf = MANF(
-            channels=hidden_dim,
-            k_small=k_small,
-            k_medium=k_medium,
-            k_large=k_large,
-            dropout=dropout,
+        self.manf = (
+            MANF(
+                channels=hidden_dim,
+                k_small=k_small,
+                k_medium=k_medium,
+                k_large=k_large,
+                dropout=dropout,
+            )
+            if self.use_manf
+            else None
         )
 
-        self.radm = RADM(channels=hidden_dim, k=k_medium, dropout=dropout)
+        self.radm = RADM(channels=hidden_dim, k=k_medium, dropout=dropout) if self.use_radm else None
 
         self.pre_backbone = nn.Sequential(
             nn.Linear(hidden_dim, hidden_dim),
@@ -540,10 +550,14 @@ class WeatherMambaSegmentationFinal(nn.Module):
             use_local_mixing=True,
         )
 
-        self.wgrg = WGRG(
-            channels=hidden_dim,
-            num_weather_types=num_weather_types,
-            dropout=dropout,
+        self.wgrg = (
+            WGRG(
+                channels=hidden_dim,
+                num_weather_types=num_weather_types,
+                dropout=dropout,
+            )
+            if self.use_wgrg
+            else None
         )
 
         self.global_encoder = nn.Sequential(
@@ -586,12 +600,15 @@ class WeatherMambaSegmentationFinal(nn.Module):
         coords = points[..., :3]
 
         x = self.point_encoder(points)
-        x = self.manf(x, coords)
-        x = self.radm(x)
+        if self.manf is not None:
+            x = self.manf(x, coords)
+        if self.radm is not None:
+            x = self.radm(x)
         x = self.pre_backbone(x)
 
         x, stage_features = self.backbone(x, return_multi_stage=True)
-        x = self.wgrg(x, weather_type)
+        if self.wgrg is not None:
+            x = self.wgrg(x, weather_type)
 
         global_feat = self.global_encoder(x.mean(dim=1))
         global_feat = global_feat.unsqueeze(1).expand(-1, x.size(1), -1)
