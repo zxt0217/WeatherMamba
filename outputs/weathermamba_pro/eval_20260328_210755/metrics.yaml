@@ -1,0 +1,6 @@
+loss: 2.9758830070495605
+acc: 0.0
+num_batches: 1
+num_predictions_saved: 1
+eval_root: /tmp/weathermamba_smoke/SemanticSTF
+eval_split: dense_fog
