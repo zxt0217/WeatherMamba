@@ -1,33 +1,50 @@
-# WeatherMamba_Pro
-[![DOI](https://zenodo.org/badge/1192359755.svg)](https://doi.org/10.5281/zenodo.19231094)
-Note: This repository contains the official implementation of our manuscript titled "WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions", which is currently submitted to The Visual Computer. If you find this code or our research helpful, we kindly urge you to cite the associated manuscript (see Citation below).
-Official PyTorch implementation for weather-aware LiDAR point cloud segmentation.
+# WeatherMamba
 
-## Table of Contents
+**DOI:** [10.5281/zenodo.19231095](https://doi.org/10.5281/zenodo.19231095)
 
-- [Highlights](#highlights)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Dataset Preparation](#dataset-preparation)
-- [Training](#training)
-- [Hyperparameter Tuning](#hyperparameter-tuning)
-- [Outputs](#outputs)
+This repository contains the official implementation of our manuscript:
 
-## Highlights
+**WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions**
 
-- Mamba-based architecture for point cloud segmentation.
-- Weather-aware workflow with configurable training and augmentation.
-- Config-driven pipeline with CLI overrides for fast experiments.
+The code in this repository is associated with the manuscript above. If you find this repository helpful, please consider citing the corresponding work.
 
-## Method Overview
+---
 
-WeatherMamba first encodes raw point features and applies MANF to aggregate multi-scale neighborhood cues and geometric statistics.  
-RADM then estimates noise confidence and refines point features, which improves robustness under adverse-weather corruption.  
-The refined tokens are processed by a hierarchical bidirectional Mamba backbone to capture long-range dependencies with efficient sequence modeling.  
-Finally, WGRG uses weather-conditioned embeddings and gated fusion to adapt features before the segmentation head predicts per-point semantic labels.
+## Overview
 
+WeatherMamba is a domain-generalized LiDAR point cloud semantic segmentation framework for autonomous driving under adverse weather conditions. The framework consists of:
 
-## Project Structure
+- **MANF**: Multi-scale Adaptive Neighborhood Fusion for local geometric recovery
+- **RADM**: Reliability-Aware Denoising Module for suppressing unstable noisy responses
+- **Hierarchical WeatherMamba Backbone**: efficient long-range context modeling
+- **WGRG**: Weather-Conditioned Geometry-Reflectance Gating for adaptive high-level feature recalibration
+
+The method is evaluated on adverse-weather domain generalization benchmarks including:
+
+- **SemanticKITTI -> SemanticSTF**
+- **SynLiDAR -> SemanticSTF**
+
+---
+
+## Environment
+
+The experiments in this repository were developed and tested under the following environment:
+
+- **OS**: Ubuntu 20.04 (or your actual version)
+- **Python**: 3.8
+- **PyTorch**: 2.0.1 (replace with your actual version)
+- **CUDA**: 11.8 (replace with your actual version)
+- **GPU**: NVIDIA RTX 4090 / A100 / etc. (replace with your actual GPU)
+
+Create the environment:
+
+```bash
+conda create -n weathermamba python=3.8 -y
+conda activate weathermamba
+pip install -r requirements.txt
+```
+
+## Repository Structure
 
 ```text
 .
@@ -36,142 +53,271 @@ Finally, WGRG uses weather-conditioned embeddings and gated fusion to adapt feat
 │   ├── model.yaml
 │   └── train.yaml
 ├── scripts/
-│   └── train.py
+│   ├── train.py
+│   └── test.py
 ├── weathermamba/
-│   ├── __init__.py
-│   ├── cli/
-│   │   ├── train.py
-│   │   └── __init__.py
-│   ├── configs/
-│   │   ├── data.yaml
-│   │   ├── model.yaml
-│   │   ├── train.yaml
-│   │   └── __init__.py
 │   ├── data/
-│   │   ├── augmentation.py
-│   │   ├── dataset.py
-│   │   └── __init__.py
 │   ├── engine/
-│   │   ├── trainer.py
-│   │   └── __init__.py
 │   ├── models/
-│   │   ├── mamba_mock.py
-│   │   ├── weather_mamba.py
-│   │   └── __init__.py
-│   └── utils/
-│       ├── config.py
-│       ├── runtime.py
-│       └── __init__.py
+│   ├── utils/
+│   └── ...
+├── outputs/
 └── requirements.txt
-```
-
-## Installation
-
-1. Clone the repository.
-
-```bash
-git clone https://github.com/<your-org>/WeatherMamba_Pro.git
-cd WeatherMamba_Pro
-```
-
-2. Create and activate environment.
-
-```bash
-conda create -n weathermamba python=3.8 -y
-conda activate weathermamba
-```
-
-3. Install dependencies.
-
-```bash
-pip install -r requirements.txt
 ```
 
 ## Dataset Preparation
 
-Set your dataset root in `configs/data.yaml`:
+### 1. Datasets
+
+The experiments in the paper use the following datasets:
+
+- SemanticKITTI
+- SemanticSTF
+- SynLiDAR
+
+Please download the datasets from their official sources.
+
+### 2. Expected directory structure
+
+Set the dataset root in `configs/data.yaml`:
 
 ```yaml
-dataset_path: ""
+dataset_path: /path/to/dataset_root
 train_split: train
 val_split: val
+test_split: test
 ```
 
 Expected structure:
 
 ```text
 <dataset_root>/
-├── train/
+├── SemanticKITTI/
+│   ├── train/
+│   ├── val/
 │   └── ...
-└── val/
+├── SemanticSTF/
+│   ├── dense_fog/
+│   ├── light_fog/
+│   ├── rain/
+│   ├── snow/
+│   └── ...
+└── SynLiDAR/
+    ├── train/
+    ├── val/
     └── ...
 ```
 
-Supported input formats:
+### 3. Input format
 
-- `.bin` point clouds.
-- `.txt` point clouds.
+Supported point cloud input formats:
+
+- `.bin`
+- `.txt`
+
+Each point should contain:
+
+- `x, y, z`
+- `intensity`
+
+### 4. Label mapping / preprocessing
+
+Please ensure that the label mapping and preprocessing settings are consistent with the paper configuration. The corresponding settings are defined in:
+
+- `configs/data.yaml`
+- Dataset loader implementation in `weathermamba/data/dataset.py`
 
 ## Training
 
-Basic run:
+### Main experiment: SemanticKITTI -> SemanticSTF
 
 ```bash
-python scripts/train.py --dataset-path ./your_dataset_root
+python scripts/train.py \
+    --dataset-path /path/to/dataset_root \
+    --source-dataset SemanticKITTI \
+    --target-dataset SemanticSTF \
+    --config configs/train.yaml
 ```
 
-Dry run:
+### Main experiment: SynLiDAR -> SemanticSTF
 
 ```bash
-python scripts/train.py --dataset-path ./your_dataset_root --dry-run
+python scripts/train.py \
+    --dataset-path /path/to/dataset_root \
+    --source-dataset SynLiDAR \
+    --target-dataset SemanticSTF \
+    --config configs/train.yaml
 ```
 
-Override common settings:
+### Common CLI overrides
 
 ```bash
-python scripts/train.py --dataset-path ./your_dataset_root --epochs 100 --batch-size 4 --lr 5e-4 --hidden-dim 512 --stage-depths 3,3,4
+python scripts/train.py \
+    --dataset-path /path/to/dataset_root \
+    --epochs 100 \
+    --batch-size 4 \
+    --lr 5e-4 \
+    --hidden-dim 384 \
+    --stage-depths 2,2,2
 ```
 
-## Hyperparameter Tuning
+## Evaluation
 
-Main tuning files:
+### Evaluate a trained checkpoint
 
-- `configs/train.yaml`: `epochs`, `lr`, `weight_decay`, `amp`, `grad_clip`.
-- `configs/data.yaml`: `num_points`, `loading.batch_size`, `loading.num_workers`, `augmentation`.
-- `configs/model.yaml`: `hidden_dim`, `stage_depths`, `dropout`, neighborhood sizes.
+```bash
+python scripts/test.py \
+    --dataset-path /path/to/dataset_root \
+    --checkpoint /path/to/checkpoint.pth \
+    --source-dataset SemanticKITTI \
+    --target-dataset SemanticSTF
+```
+
+### Evaluate on weather-specific subsets
+
+#### Dense fog
+
+```bash
+python scripts/test.py \
+    --dataset-path /path/to/dataset_root \
+    --checkpoint /path/to/checkpoint.pth \
+    --subset dense_fog
+```
+
+#### Light fog
+
+```bash
+python scripts/test.py \
+    --dataset-path /path/to/dataset_root \
+    --checkpoint /path/to/checkpoint.pth \
+    --subset light_fog
+```
+
+#### Rain
+
+```bash
+python scripts/test.py \
+    --dataset-path /path/to/dataset_root \
+    --checkpoint /path/to/checkpoint.pth \
+    --subset rain
+```
+
+#### Snow
+
+```bash
+python scripts/test.py \
+    --dataset-path /path/to/dataset_root \
+    --checkpoint /path/to/checkpoint.pth \
+    --subset snow
+```
+
+## Reproducing the Paper Results
+
+The following table provides a minimal guide for reproducing the main results reported in the paper.
+
+| Paper Item | Setting | Command / Script | Output |
+| --- | --- | --- | --- |
+| Main result | SemanticKITTI -> SemanticSTF | `scripts/train.py + scripts/test.py` | Main comparison table |
+| Auxiliary result | SynLiDAR -> SemanticSTF | `scripts/train.py + scripts/test.py` | Main comparison table |
+| Dense fog | SemanticSTF dense fog subset | `scripts/test.py --subset dense_fog` | Weather-specific table |
+| Light fog | SemanticSTF light fog subset | `scripts/test.py --subset light_fog` | Weather-specific table |
+| Rain | SemanticSTF rain subset | `scripts/test.py --subset rain` | Weather-specific table |
+| Snow | SemanticSTF snow subset | `scripts/test.py --subset snow` | Weather-specific table |
+| Ablation | Module ablation settings | Config modifications | Ablation table |
+
+### Ablation settings
+
+To reproduce the ablation study, disable/enable the corresponding modules in the model configuration:
+
+- Baseline: backbone only
+- + MANF
+- + RADM
+- + WGRG
+- Full model
+
+Example:
+
+```bash
+python scripts/train.py \
+    --dataset-path /path/to/dataset_root \
+    --use-manf true \
+    --use-radm true \
+    --use-wgrg false
+```
+
+## Configuration
+
+Main configuration files:
+
+- `configs/train.yaml`: training schedule, optimizer, AMP, gradient clipping, epochs, etc.
+- `configs/data.yaml`: dataset path, number of points, batch size, workers, augmentation, dataset split
+- `configs/model.yaml`: hidden dimension, stage depths, dropout, neighborhood size, module switches
 
 ## Outputs
 
-Training outputs are saved to:
+Training and evaluation outputs are saved to:
 
 ```text
-outputs/weathermamba_pro/<run_name>/
+outputs/weathermamba/<run_name>/
 ├── checkpoints/
+├── logs/
+├── predictions/
 ├── model_resolved.yaml
 ├── data_resolved.yaml
 └── train_resolved.yaml
 ```
-##  Citation
 
-If you find WeatherMamba useful for your research, please cite our work:
+## Checkpoints
+
+If pretrained checkpoints are provided, please place them under:
+
+```text
+checkpoints/
+```
+
+Or specify the path directly in the testing command:
+
+```bash
+python scripts/test.py --checkpoint /path/to/checkpoint.pth
+```
+
+If you release checkpoints later, add the download links here.
+
+## Notes on Reproducibility
+
+To improve reproducibility, we recommend:
+
+- Using the same environment versions listed above
+- Verifying dataset paths and label mappings before training
+- Keeping the training and evaluation configuration files unchanged when reproducing the reported numbers
+- Testing the exact checkpoint corresponding to each reported experiment
+
+## Citation
+
+If you find this repository useful, please cite:
 
 ```bibtex
-@article{zxt2026weathermamba,
+@misc{weathermamba2026,
   title={WeatherMamba: Robust LiDAR Point Cloud Segmentation for Autonomous Driving under Adverse Weather Conditions},
-  author={Your Name and Others},
-  journal={The Visual Computer},
+  author={He Huang and Xintai Zhang and Yidan Zhang and Junxing Yang and Yu Liang},
   year={2026},
-  note={Under Review},
-  url={[https://github.com/zxt0217/WeatherMamba](https://github.com/zxt0217/WeatherMamba)}
+  note={Manuscript and code release},
+  doi={10.5281/zenodo.19231095},
+  url={https://doi.org/10.5281/zenodo.19231095}
 }
+```
 
-### Data Acknowledgements
+## Data Acknowledgements
 
-We would like to thank the authors of the following datasets and codebases:
+We would like to thank the authors of the following datasets and related resources:
 
+```bibtex
 @inproceedings{behley2019semantickitti,
   author = {J. Behley and M. Garbade and A. Milioto and J. Quenzel and S. Behnke and C. Stachniss and J. Gall},
   title = {{SemanticKITTI: A Dataset for Semantic Scene Understanding of LiDAR Sequences}},
-  booktitle = {Proc. of the IEEE/CVF Conf. on Computer Vision and Pattern Recognition (CVPR)},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
   year = {2019}
 }
+```
+
+Please also acknowledge the official sources of SemanticSTF and SynLiDAR in your final repository version if they are used in your experiments.
