@@ -569,11 +569,6 @@ python scripts/visualize_predictions.py \
     --output-dir outputs/weathermamba_pro/semanticstf_visualisation/visualisations
 ```
 
-The final assembled qualitative figures used in the manuscript are provided for reference:
-
-* [Vis.pdf](figures/Vis.pdf)
-* [zoomin.pdf](figures/zoomin.pdf)
-
 ## Outputs
 
 Training outputs are saved to:
