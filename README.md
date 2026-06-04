@@ -277,8 +277,6 @@ use_wgrg: true
 
 The following mock checkpoints are provided only to verify checkpoint loading, evaluation entrypoints, and the qualitative visualisation pipeline.
 
-These mock checkpoints are **not** the trained weights used to obtain the manuscript results and should **not** be used to reproduce the reported mIoU values.
-
 | Setting                     | Checkpoint                              | Download                                                                | Extraction code |
 | --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
 | SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf_mock.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
@@ -289,8 +287,6 @@ Place downloaded checkpoint files under:
 ```text
 checkpoints/
 ```
-
-The trained checkpoints used to obtain the manuscript results will be released separately when available.
 
 ## Quick Dry Run
 
@@ -309,8 +305,6 @@ python scripts/train.py \
 ```
 
 ## Reproducing the Main Results
-
-> **Note:** The mock checkpoints listed above are intended only for interface validation. Replace the checkpoint placeholders below with the corresponding trained paper checkpoints when they are released.
 
 ### 1. SemanticKITTI → SemanticSTF
 
