@@ -267,14 +267,14 @@ use_radm: true
 use_wgrg: true
 ```
 
-## Mock Checkpoints for Interface Validation
+##Checkpoints for Interface Validation
 
-The following mock checkpoints are provided only to verify checkpoint loading, evaluation entrypoints, and the qualitative visualisation pipeline.
+The following checkpoints are provided only to verify checkpoint loading, evaluation entrypoints, and the qualitative visualisation pipeline.
 
 | Setting                     | Checkpoint                              | Download                                                                | Extraction code |
 | --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
-| SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf_mock.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
-| SynLiDAR → SemanticSTF      | `synlidar_to_semanticstf_mock.pth`      | [Baidu Cloud](https://pan.baidu.com/s/1NWkHWJm8olgeMPq_k_-V4Q?pwd=bmbs) | `bmbs`          |
+| SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
+| SynLiDAR → SemanticSTF      | `synlidar_to_semanticstf.pth`      | [Baidu Cloud](https://pan.baidu.com/s/1NWkHWJm8olgeMPq_k_-V4Q?pwd=bmbs) | `bmbs`          |
 
 Place downloaded checkpoint files under:
 
@@ -324,7 +324,7 @@ Evaluate the trained checkpoint on SemanticSTF:
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root \
     --target-dataset SemanticSTF \
-    --checkpoint checkpoints/semantickitti_to_semanticstf_mock.pth \
+    --checkpoint checkpoints/semantickitti_to_semanticstf.pth \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
@@ -372,7 +372,7 @@ Evaluate the trained checkpoint on SemanticSTF:
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root \
     --target-dataset SemanticSTF \
-    --checkpoint checkpoints/synlidar_to_semanticstf_mock.pth \
+    --checkpoint checkpoints/synlidar_to_semanticstf.pth \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
