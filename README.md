@@ -59,6 +59,9 @@ The experiments were developed and tested under the following environment:
 - **PyTorch**: 2.0.1
 - **CUDA**: 11.8
 - **GPU**: NVIDIA RTX 4090
+- **mamba-ssm**: 1.2.2
+- **causal-conv1d**: 1.2.2.post1
+
 
 Create the environment:
 
@@ -76,8 +79,8 @@ pip install torch==2.0.1 torchvision==0.15.2 --index-url https://download.pytorc
 Install the selective state-space dependencies used for the paper experiments:
 
 ```bash
-pip install mamba-ssm==<MAMBA_SSM_VERSION>
-pip install causal-conv1d==<CAUSAL_CONV1D_VERSION>
+pip install mamba-ssm==1.2.2
+pip install causal-conv1d==1.2.2.post1
 ```
 
 Install the remaining dependencies:
@@ -126,24 +129,17 @@ pip install -r requirements.txt
 ### 1. Download the datasets
 
 The experiments use the following public datasets:
-
-* [SemanticKITTI](SEMANTICKITTI_OFFICIAL_URL)
-* [SemanticSTF](SEMANTICSTF_OFFICIAL_URL)
-* [SynLiDAR](SYNLIDAR_OFFICIAL_URL)
+SemanticKITTI
+SemanticSTF
+SynLiDAR
 
 Please follow the terms of use and citation requirements of each dataset.
 
 ### 2. Label mapping
 
-The experiments use the official 19-class semantic mapping adopted in the manuscript.
-
-The label mapping file is located at:
-
-```text
-<PATH_TO_19_CLASS_LABEL_MAPPING>
-```
-
-Before training or evaluation, verify that all source-domain and target-domain labels have been converted to the same 19-class space.
+The experiments use a unified 19-class semantic label space. The corresponding label mapping files are located under:
+configs/label_maps/
+The raw labels of SemanticKITTI, SemanticSTF, and SynLiDAR should be mapped to the same 19-class training IDs before training and evaluation.
 
 ### 3. Expected input format
 
@@ -634,14 +630,34 @@ This project is released under the MIT License. See [LICENSE](LICENSE) for detai
 
 Please cite the original dataset papers and follow their licences when using SemanticKITTI, SemanticSTF, and SynLiDAR.
 
-```bibtex
-@inproceedings{behley2019semantickitti,
+@inproceedings{behley2019iccv,
   author    = {J. Behley and M. Garbade and A. Milioto and J. Quenzel and S. Behnke and C. Stachniss and J. Gall},
   title     = {{SemanticKITTI: A Dataset for Semantic Scene Understanding of LiDAR Sequences}},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision},
   year      = {2019}
 }
 
-% TODO: Add the official SemanticSTF citation.
+@article{xiao20233d,
+  title   = {3D Semantic Segmentation in the Wild: Learning Generalized Models for Adverse-Condition Point Clouds},
+  author  = {Xiao, Aoran and Huang, Jiaxing and Xuan, Weihao and Ren, Ruijie and Liu, Kangcheng and Guan, Dayan and El Saddik, Abdulmotaleb and Lu, Shijian and Xing, Eric},
+  journal = {arXiv preprint arXiv:2304.00690},
+  year    = {2023}
+}
 
-% TODO: Add the official SynLiDAR citation.
+@inproceedings{bijelic2020seeing,
+  title     = {Seeing through Fog without Seeing Fog: Deep Multimodal Sensor Fusion in Unseen Adverse Weather},
+  author    = {Bijelic, Mario and Gruber, Tobias and Mannan, Fahim and Kraus, Florian and Ritter, Werner and Dietmayer, Klaus and Heide, Felix},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages     = {11682--11692},
+  year      = {2020}
+}
+
+@inproceedings{xiao2022transfer,
+  title     = {Transfer Learning from Synthetic to Real LiDAR Point Cloud for Semantic Segmentation},
+  author    = {Xiao, Aoran and Huang, Jiaxing and Guan, Dayan and Zhan, Fangneng and Lu, Shijian},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {36},
+  number    = {3},
+  pages     = {2795--2803},
+  year      = {2022}
+}
