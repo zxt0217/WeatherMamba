@@ -324,7 +324,7 @@ Evaluate the trained checkpoint on SemanticSTF:
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root \
     --target-dataset SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
+    --checkpoint checkpoints/semantickitti_to_semanticstf_mock.pth \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
@@ -339,8 +339,7 @@ Compute the official 19-class mIoU:
 ```bash
 python scripts/evaluate_miou.py \
     --prediction-dir outputs/weathermamba_pro/semantickitti_to_semanticstf/predictions \
-    --ground-truth-root /path/to/prepared/dataset_root/SemanticSTF \
-    --label-map <PATH_TO_19_CLASS_LABEL_MAPPING>
+    --num-classes 19
 ```
 
 Expected manuscript result:
@@ -373,7 +372,7 @@ Evaluate the trained checkpoint on SemanticSTF:
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root \
     --target-dataset SemanticSTF \
-    --checkpoint checkpoints/<SYNLIDAR_CHECKPOINT_NAME>.pth \
+    --checkpoint checkpoints/synlidar_to_semanticstf_mock.pth \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
@@ -388,8 +387,7 @@ Compute the official 19-class mIoU:
 ```bash
 python scripts/evaluate_miou.py \
     --prediction-dir outputs/weathermamba_pro/synlidar_to_semanticstf/predictions \
-    --ground-truth-root /path/to/prepared/dataset_root/SemanticSTF \
-    --label-map <PATH_TO_19_CLASS_LABEL_MAPPING>
+    --num-classes 19
 ```
 
 Expected manuscript result:
@@ -559,11 +557,9 @@ prediction
 Generate colour-coded semantic predictions and correctness maps:
 
 ```bash
-python scripts/visualize_predictions.py \
-    --prediction-dir outputs/weathermamba_pro/semanticstf_visualisation/predictions \
-    --ground-truth-root /path/to/prepared/dataset_root/SemanticSTF \
-    --label-map <PATH_TO_19_CLASS_LABEL_MAPPING> \
-    --output-dir outputs/weathermamba_pro/semanticstf_visualisation/visualisations
+python scripts/evaluate_miou.py \
+    --prediction-dir outputs/weathermamba_pro/synlidar_to_semanticstf/predictions \
+    --num-classes 19
 ```
 
 ## Outputs
