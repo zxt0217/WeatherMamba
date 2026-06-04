@@ -65,7 +65,7 @@ Create the environment:
 ```bash
 conda create -n weathermamba python=3.8 -y
 conda activate weathermamba
-````
+```
 
 Install PyTorch with CUDA 11.8:
 
@@ -645,7 +645,3 @@ Please cite the original dataset papers and follow their licences when using Sem
 % TODO: Add the official SemanticSTF citation.
 
 % TODO: Add the official SynLiDAR citation.
-```
-
-```
-```
