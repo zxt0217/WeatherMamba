@@ -32,23 +32,31 @@ The target-domain evaluation includes:
 * Rain
 * Snow / sleet
 
-## Method Overview <p align="center"> <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba"> </p> The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
+## Method Overview
+
+<p align="center">
+  <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba">
+</p>
+
+The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
 
 ## Paper Configuration
 
 The main experiments reported in the manuscript use the following settings:
 
-| Item                            | Value              |
-| ------------------------------- | ------------------ |
-| Number of semantic classes      | 19                 |
-| Number of input points per scan | 32,768             |
-| Batch size                      | 4                  |
-| Training epochs                 | 50                 |
-| Optimizer                       | AdamW              |
-| Initial learning rate           | 0.001              |
-| Weight decay                    | 0.01               |
-| Random seed                     | 42                 |
-| Input features                  | x, y, z, intensity |
+| Item                            | Value                                              |
+| ------------------------------- | -------------------------------------------------- |
+| Number of semantic classes      | 19                                                 |
+| Number of input points per scan | 32,768                                             |
+| Batch size                      | 4                                                  |
+| Training epochs                 | 50                                                 |
+| Optimizer                       | AdamW                                              |
+| Initial learning rate           | 0.001                                              |
+| Weight decay                    | 0.01                                               |
+| Repeated runs                   | Multiple random seeds; best-performing run used 42 |
+| Input features                  | x, y, z, intensity                                 |
+
+The main experiments were repeated with multiple random seeds. For SemanticKITTI→SemanticSTF, the observed mIoU ranged from 35.2% to 35.8%, and the reported best-performing run used seed 42.
 
 Please keep the configuration files unchanged when reproducing the reported results.
 
@@ -90,7 +98,7 @@ Install the remaining dependencies:
 pip install -r requirements.txt
 ```
 
-> **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`. 
+> **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`.
 
 ## Repository Structure
 
@@ -245,7 +253,6 @@ The paper configuration should contain:
 
 ```yaml
 # configs/train.yaml
-seed: 42
 epochs: 50
 lr: 0.001
 weight_decay: 0.01
@@ -267,10 +274,10 @@ use_radm: true
 use_wgrg: true
 ```
 
-## Checkpoints for Interface Validation
+## Pretrained Checkpoints
 
-| Setting                     | Checkpoint                              | Download                                                                | Extraction code |
-| --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
+| Setting                     | Checkpoint                         | Download                                                                | Extraction code |
+| --------------------------- | ---------------------------------- | ----------------------------------------------------------------------- | --------------- |
 | SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
 | SynLiDAR → SemanticSTF      | `synlidar_to_semanticstf.pth`      | [Baidu Cloud](https://pan.baidu.com/s/1NWkHWJm8olgeMPq_k_-V4Q?pwd=bmbs) | `bmbs`          |
 
@@ -308,12 +315,11 @@ python scripts/train.py \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
-    --experiment-name semantickitti_source_seed42 \
+    --experiment-name semantickitti_source \
     --epochs 50 \
     --batch-size 4 \
     --num-points 32768 \
-    --num-classes 19 \
-    --seed 42
+    --num-classes 19
 ```
 
 Evaluate the trained checkpoint on SemanticSTF:
@@ -329,7 +335,7 @@ python scripts/test.py \
     --experiment-name semantickitti_to_semanticstf \
     --num-points 32768 \
     --num-classes 19 \
-    --seed 42
+    --save-predictions
 ```
 
 Compute the official 19-class mIoU:
@@ -356,12 +362,11 @@ python scripts/train.py \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
-    --experiment-name synlidar_source_seed42 \
+    --experiment-name synlidar_source \
     --epochs 50 \
     --batch-size 4 \
     --num-points 32768 \
-    --num-classes 19 \
-    --seed 42
+    --num-classes 19
 ```
 
 Evaluate the trained checkpoint on SemanticSTF:
@@ -377,7 +382,7 @@ python scripts/test.py \
     --experiment-name synlidar_to_semanticstf \
     --num-points 32768 \
     --num-classes 19 \
-    --seed 42
+    --save-predictions
 ```
 
 Compute the official 19-class mIoU:
@@ -394,12 +399,17 @@ Expected manuscript result:
 SynLiDAR → SemanticSTF: 23.5% mIoU
 ```
 
+## Qualitative Results
 
-## Qualitative Results <p align="center"> <img src="figures/Vis_01.png" width="100%" alt="Qualitative comparison under adverse weather"> </p> The qualitative comparison presents representative segmentation results under dense fog, light fog, rain, and snow conditions.
+<p align="center">
+  <img src="figures/Vis_01.png" width="100%" alt="Qualitative comparison under adverse weather">
+</p>
+
+The qualitative comparison presents representative segmentation results under dense fog, light fog, rain, and snow conditions.
 
 ### 3. Weather-wise evaluation
 
-Evaluate the SemanticKITTI-trained checkpoint on the four SemanticSTF weather subsets:
+Evaluate the SemanticKITTI-trained checkpoint on each SemanticSTF weather subset by replacing `dense_fog` with `light_fog`, `rain`, or `snow` when required:
 
 ```bash
 python scripts/test.py \
@@ -411,12 +421,6 @@ python scripts/test.py \
     --train-config configs/train.yaml \
     --num-points 32768 \
     --num-classes 19
-```
-
-```bash
-python scripts/test.py \
-    --dataset-path /path/to/prepared/dataset_root/SemanticSTF \
-    --lasses 19
 ```
 
 The expected weather-wise results are:
@@ -473,8 +477,7 @@ python scripts/train.py \
     --epochs 50 \
     --batch-size 4 \
     --num-points 32768 \
-    --num-classes 19 \
-    --seed 42
+    --num-classes 19
 ```
 
 Evaluate each checkpoint on SemanticSTF using the same evaluation protocol described above.
