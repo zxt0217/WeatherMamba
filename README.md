@@ -557,9 +557,9 @@ prediction
 Generate colour-coded semantic predictions and correctness maps:
 
 ```bash
-python scripts/evaluate_miou.py \
-    --prediction-dir outputs/weathermamba_pro/synlidar_to_semanticstf/predictions \
-    --num-classes 19
+python scripts/visualize_predictions.py \
+    --prediction-dir outputs/weathermamba_pro/semanticstf_visualisation/predictions \
+    --output-dir outputs/weathermamba_pro/semanticstf_visualisation/visualisations
 ```
 
 ## Outputs
