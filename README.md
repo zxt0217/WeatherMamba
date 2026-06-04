@@ -90,14 +90,6 @@ Install the remaining dependencies:
 pip install -r requirements.txt
 ```
 
-To record an exact snapshot of all installed Python package versions, run:
-
-```bash
-pip freeze > requirements-lock.txt
-```
-
-The generated `requirements-lock.txt` file should be committed to the repository before the final release.
-
 > **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`. The fallback mock implementation is intended only for interface checks and cannot reproduce the reported results.
 
 ## Repository Structure
