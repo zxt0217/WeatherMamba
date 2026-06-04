@@ -156,44 +156,81 @@ Supported point cloud formats:
 
 For `.bin` point clouds, label files should use the `.label` suffix and follow a SemanticKITTI-style organization.
 
-### 4. Expected directory structure
+````markdown
 
-The source-domain training datasets should be organized into split directories:
+### 4. Official dataset directory structures
+
+The original datasets should be organized according to their official release formats.
+
+#### SemanticKITTI
 
 ```text
-<DATASET_ROOT>/
-├── SemanticKITTI/
-│   ├── train/
+<SEMANTICKITTI_ROOT>/
+└── sequences/
+    ├── 00/
+    │   ├── velodyne/
+    │   │   ├── 000000.bin
+    │   │   ├── 000001.bin
+    │   │   └── ...
+    │   ├── labels/
+    │   │   ├── 000000.label
+    │   │   ├── 000001.label
+    │   │   └── ...
+    │   ├── calib.txt
+    │   ├── poses.txt
+    │   └── times.txt
+    ├── 01/
+    ├── 02/
+    └── ...
+
+SemanticKITTI uses sequence-based splits rather than separate `train/` and `val/` directories. The sequence split and 19-class learning map should follow the official SemanticKITTI configuration.
+
+#### SemanticSTF
+
+```text
+<SEMANTICSTF_ROOT>/
+├── train/
+│   ├── velodyne/
+│   │   ├── 000000.bin
+│   │   ├── 000001.bin
 │   │   └── ...
-│   └── val/
+│   └── labels/
+│       ├── 000000.label
+│       ├── 000001.label
 │       └── ...
-├── SynLiDAR/
-│   ├── train/
-│   │   └── ...
-│   └── val/
-│       └── ...
-└── SemanticSTF/
-    ├── dense_fog/
-    │   └── ...
-    ├── light_fog/
-    │   └── ...
-    ├── rain/
-    │   └── ...
-    └── snow/
-        └── ...
+├── val/
+│   ├── velodyne/
+│   └── labels/
+├── test/
+│   ├── velodyne/
+│   └── labels/
+└── semanticstf.yaml
 ```
 
-The official dataset files may require reorganization or preprocessing before they match this structure.
+SemanticSTF should remain in its official `train/`, `val/`, and `test/` organization. Weather-wise evaluation is performed through the evaluation protocol and metadata rather than by reorganizing the dataset into separate weather folders.
 
-Run the preprocessing command:
+#### SynLiDAR
 
-```bash
-python <DATA_PREPROCESSING_SCRIPT> \
-    --input-root /path/to/original/dataset \
-    --output-root /path/to/prepared/dataset
-```
+```text
+<SYNLIDAR_ROOT>/
+├── 00/
+│   ├── velodyne/
+│   │   ├── 000000.bin
+│   │   ├── 000001.bin
+│   │   └── ...
+│   └── labels/
+│       ├── 000000.label
+│       ├── 000001.label
+│       └── ...
+├── 01/
+├── 02/
+├── ...
+├── 12/
+├── annotations.yaml
+└── read_data.py
 
-Set the prepared dataset root in `configs/data.yaml` or pass it through `--dataset-path`.
+SynLiDAR is released as numbered sequences. The source-domain training split used in this repository should be defined in the corresponding configuration file.
+
 
 ## Configuration Files
 
