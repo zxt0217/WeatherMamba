@@ -269,8 +269,6 @@ use_wgrg: true
 
 ##Checkpoints for Interface Validation
 
-The following checkpoints are provided only to verify checkpoint loading, evaluation entrypoints, and the qualitative visualisation pipeline.
-
 | Setting                     | Checkpoint                              | Download                                                                | Extraction code |
 | --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
 | SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
@@ -406,7 +404,7 @@ Evaluate the SemanticKITTI-trained checkpoint on the four SemanticSTF weather su
 ```bash
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root/SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
+    --checkpoint checkpoints/semantickitti_to_semanticstf.pth \
     --subset dense_fog \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
@@ -418,37 +416,7 @@ python scripts/test.py \
 ```bash
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root/SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
-    --subset light_fog \
-    --model-config configs/model.yaml \
-    --data-config configs/data.yaml \
-    --train-config configs/train.yaml \
-    --num-points 32768 \
-    --num-classes 19
-```
-
-```bash
-python scripts/test.py \
-    --dataset-path /path/to/prepared/dataset_root/SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
-    --subset rain \
-    --model-config configs/model.yaml \
-    --data-config configs/data.yaml \
-    --train-config configs/train.yaml \
-    --num-points 32768 \
-    --num-classes 19
-```
-
-```bash
-python scripts/test.py \
-    --dataset-path /path/to/prepared/dataset_root/SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
-    --subset snow \
-    --model-config configs/model.yaml \
-    --data-config configs/data.yaml \
-    --train-config configs/train.yaml \
-    --num-points 32768 \
-    --num-classes 19
+    --lasses 19
 ```
 
 The expected weather-wise results are:
@@ -531,7 +499,7 @@ Run evaluation with `--save-predictions`:
 python scripts/test.py \
     --dataset-path /path/to/prepared/dataset_root \
     --target-dataset SemanticSTF \
-    --checkpoint checkpoints/<SEMANTICKITTI_CHECKPOINT_NAME>.pth \
+    --checkpoint checkpoints/semantickitti_to_semanticstf.pth \
     --model-config configs/model.yaml \
     --data-config configs/data.yaml \
     --train-config configs/train.yaml \
