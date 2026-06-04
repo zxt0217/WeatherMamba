@@ -90,7 +90,7 @@ Install the remaining dependencies:
 pip install -r requirements.txt
 ```
 
-> **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`. The fallback mock implementation is intended only for interface checks and cannot reproduce the reported results.
+> **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`. 
 
 ## Repository Structure
 
