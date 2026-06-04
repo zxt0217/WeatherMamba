@@ -1,8 +1,9 @@
-## Method Overview <p align="center"> <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba"> </p> The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
 # WeatherMamba
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19231095.svg)](https://doi.org/10.5281/zenodo.19231095)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+## Method Overview <p align="center"> <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba"> </p> The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
 
 Official implementation of the manuscript:
 
@@ -288,6 +289,8 @@ Place downloaded checkpoint files under:
 ```text
 checkpoints/
 ```
+
+## Qualitative Results <p align="center"> <img src="figures/Vis_01.png" width="100%" alt="Qualitative comparison under adverse weather"> </p> The qualitative comparison presents representative segmentation results under dense fog, light fog, rain, and snow conditions.
 
 ## Quick Dry Run
 
