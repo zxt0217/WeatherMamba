@@ -561,12 +561,10 @@ To improve reproducibility:
 * Use the exact environment versions listed above.
 * Use the same 19-class label mapping for all datasets.
 * Keep the paper configuration files unchanged.
-* Use `seed: 42` for the reported experiments.
 * Verify the prepared dataset structure before training.
 * Evaluate the exact checkpoint corresponding to each reported experiment.
 * Use the official evaluation protocol when computing mIoU.
 * Record resolved configuration files and logs for every run.
-* Commit an exact dependency snapshot as `requirements-lock.txt` before the final release.
 
 ## Citation
 
