@@ -7,7 +7,7 @@ Official implementation of the manuscript:
 
 **Reliable Geometry-Aware Domain Generalisation for LiDAR Point Cloud Semantic Segmentation in Adverse Weather**
 
-This repository is associated with a manuscript submitted to *The Visual Computer*. It provides the model implementation, configuration files, training and evaluation entrypoints, ablation settings, pretrained checkpoints, and instructions for reproducing the main quantitative and qualitative results.
+This repository is associated with a manuscript submitted to *The Visual Computer*. It provides the model implementation, configuration files, training and evaluation entrypoints, ablation settings, checkpoint download information, and instructions for reproducing the main quantitative and qualitative results.
 
 ## Overview
 
@@ -15,38 +15,38 @@ WeatherMamba addresses adverse-weather LiDAR semantic segmentation as a geometry
 
 The framework contains four main components:
 
-- **MANF**: Multi-scale Adaptive Neighborhood Fusion for local geometric recovery.
-- **RADM**: Reliability-Aware Denoising Module for suppressing unstable weather-induced responses.
-- **Hierarchical WeatherMamba Backbone**: selective state-space modelling for efficient long-range contextual learning.
-- **WGRG**: Weather-Conditioned Geometry--Reflectance Gating for adaptive feature recalibration.
+* **MANF**: Multi-scale Adaptive Neighborhood Fusion for local geometric recovery.
+* **RADM**: Reliability-Aware Denoising Module for suppressing unstable weather-induced responses.
+* **Hierarchical WeatherMamba Backbone**: selective state-space modelling for efficient long-range contextual learning.
+* **WGRG**: Weather-Conditioned Geometry--Reflectance Gating for adaptive feature recalibration.
 
 The manuscript evaluates the following domain generalisation settings:
 
-- **SemanticKITTI → SemanticSTF**
-- **SynLiDAR → SemanticSTF**
+* **SemanticKITTI → SemanticSTF**
+* **SynLiDAR → SemanticSTF**
 
 The target-domain evaluation includes:
 
-- Dense fog
-- Light fog
-- Rain
-- Snow / sleet
+* Dense fog
+* Light fog
+* Rain
+* Snow / sleet
 
 ## Paper Configuration
 
 The main experiments reported in the manuscript use the following settings:
 
-| Item | Value |
-| --- | --- |
-| Number of semantic classes | 19 |
-| Number of input points per scan | 32,768 |
-| Batch size | 4 |
-| Training epochs | 50 |
-| Optimizer | AdamW |
-| Initial learning rate | 0.001 |
-| Weight decay | 0.01 |
-| Random seed | 42 |
-| Input features | x, y, z, intensity |
+| Item                            | Value              |
+| ------------------------------- | ------------------ |
+| Number of semantic classes      | 19                 |
+| Number of input points per scan | 32,768             |
+| Batch size                      | 4                  |
+| Training epochs                 | 50                 |
+| Optimizer                       | AdamW              |
+| Initial learning rate           | 0.001              |
+| Weight decay                    | 0.01               |
+| Random seed                     | 42                 |
+| Input features                  | x, y, z, intensity |
 
 Please keep the configuration files unchanged when reproducing the reported results.
 
@@ -54,14 +54,13 @@ Please keep the configuration files unchanged when reproducing the reported resu
 
 The experiments were developed and tested under the following environment:
 
-- **OS**: Ubuntu 20.04
-- **Python**: 3.8
-- **PyTorch**: 2.0.1
-- **CUDA**: 11.8
-- **GPU**: NVIDIA RTX 4090
-- **mamba-ssm**: 1.2.2
-- **causal-conv1d**: 1.2.2.post1
-
+* **OS**: Ubuntu 20.04
+* **Python**: 3.8
+* **PyTorch**: 2.0.1
+* **CUDA**: 11.8
+* **GPU**: NVIDIA RTX 4090
+* **mamba-ssm**: 1.2.2
+* **causal-conv1d**: 1.2.2.post1
 
 Create the environment:
 
@@ -88,6 +87,14 @@ Install the remaining dependencies:
 ```bash
 pip install -r requirements.txt
 ```
+
+To record an exact snapshot of all installed Python package versions, run:
+
+```bash
+pip freeze > requirements-lock.txt
+```
+
+The generated `requirements-lock.txt` file should be committed to the repository before the final release.
 
 > **Important:** The paper results require the CUDA implementation provided by `mamba-ssm`. The fallback mock implementation is intended only for interface checks and cannot reproduce the reported results.
 
@@ -129,16 +136,21 @@ pip install -r requirements.txt
 ### 1. Download the datasets
 
 The experiments use the following public datasets:
-SemanticKITTI
-SemanticSTF
-SynLiDAR
+
+* [SemanticKITTI](https://www.semantic-kitti.org/)
+* [SemanticSTF](https://github.com/xiaoaoran/SemanticSTF)
+* [SynLiDAR](https://github.com/xiaoaoran/SynLiDAR)
 
 Please follow the terms of use and citation requirements of each dataset.
 
 ### 2. Label mapping
 
 The experiments use a unified 19-class semantic label space. The corresponding label mapping files are located under:
+
+```text
 configs/label_maps/
+```
+
 The raw labels of SemanticKITTI, SemanticSTF, and SynLiDAR should be mapped to the same 19-class training IDs before training and evaluation.
 
 ### 3. Expected input format
@@ -176,6 +188,7 @@ The original datasets should be organized according to their official release fo
     ├── 01/
     ├── 02/
     └── ...
+```
 
 SemanticKITTI uses sequence-based splits rather than separate `train/` and `val/` directories. The sequence split and 19-class learning map should follow the official SemanticKITTI configuration.
 
@@ -222,9 +235,9 @@ SemanticSTF should remain in its official `train/`, `val/`, and `test/` organiza
 ├── 12/
 ├── annotations.yaml
 └── read_data.py
+```
 
 SynLiDAR is released as numbered sequences. The source-domain training split used in this repository should be defined in the corresponding configuration file.
-
 
 ## Configuration Files
 
@@ -260,26 +273,24 @@ use_radm: true
 use_wgrg: true
 ```
 
-## Pretrained Checkpoints
+## Mock Checkpoints for Interface Validation
 
-Pretrained checkpoints are provided for the main experiments:
+The following mock checkpoints are provided only to verify checkpoint loading, evaluation entrypoints, and the qualitative visualisation pipeline.
 
-| Setting                     | Checkpoint                            | Download                                          |
-| --------------------------- | ------------------------------------- | ------------------------------------------------- |
-| SemanticKITTI → SemanticSTF | `<SEMANTICKITTI_CHECKPOINT_NAME>.pth` | [Baidu Cloud](SEMANTICKITTI_CHECKPOINT_BAIDU_URL) |
-| SynLiDAR → SemanticSTF      | `<SYNLIDAR_CHECKPOINT_NAME>.pth`      | [Baidu Cloud](SYNLIDAR_CHECKPOINT_BAIDU_URL)      |
+These mock checkpoints are **not** the trained weights used to obtain the manuscript results and should **not** be used to reproduce the reported mIoU values.
 
-Extraction code:
+| Setting                     | Checkpoint                              | Download                                                                | Extraction code |
+| --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
+| SemanticKITTI → SemanticSTF | `semantickitti_to_semanticstf_mock.pth` | [Baidu Cloud](https://pan.baidu.com/s/1rUFKV6KteybMdin3YY96UQ?pwd=jy89) | `jy89`          |
+| SynLiDAR → SemanticSTF      | `synlidar_to_semanticstf_mock.pth`      | [Baidu Cloud](https://pan.baidu.com/s/1NWkHWJm8olgeMPq_k_-V4Q?pwd=bmbs) | `bmbs`          |
 
-```text
-<BAIDU_EXTRACTION_CODE>
-```
-
-Place downloaded checkpoints under:
+Place downloaded checkpoint files under:
 
 ```text
 checkpoints/
 ```
+
+The trained checkpoints used to obtain the manuscript results will be released separately when available.
 
 ## Quick Dry Run
 
@@ -298,6 +309,8 @@ python scripts/train.py \
 ```
 
 ## Reproducing the Main Results
+
+> **Note:** The mock checkpoints listed above are intended only for interface validation. Replace the checkpoint placeholders below with the corresponding trained paper checkpoints when they are released.
 
 ### 1. SemanticKITTI → SemanticSTF
 
@@ -562,13 +575,10 @@ python scripts/visualize_predictions.py \
     --output-dir outputs/weathermamba_pro/semanticstf_visualisation/visualisations
 ```
 
-The final assembled qualitative figures used in the manuscript are provided under:
+The final assembled qualitative figures used in the manuscript are provided for reference:
 
-```text
-figures/
-├── Vis.pdf
-└── zoomin.pdf
-```
+* [Vis.pdf](figures/Vis.pdf)
+* [zoomin.pdf](figures/zoomin.pdf)
 
 ## Outputs
 
@@ -606,6 +616,7 @@ To improve reproducibility:
 * Evaluate the exact checkpoint corresponding to each reported experiment.
 * Use the official evaluation protocol when computing mIoU.
 * Record resolved configuration files and logs for every run.
+* Commit an exact dependency snapshot as `requirements-lock.txt` before the final release.
 
 ## Citation
 
@@ -630,6 +641,7 @@ This project is released under the MIT License. See [LICENSE](LICENSE) for detai
 
 Please cite the original dataset papers and follow their licences when using SemanticKITTI, SemanticSTF, and SynLiDAR.
 
+```bibtex
 @inproceedings{behley2019iccv,
   author    = {J. Behley and M. Garbade and A. Milioto and J. Quenzel and S. Behnke and C. Stachniss and J. Gall},
   title     = {{SemanticKITTI: A Dataset for Semantic Scene Understanding of LiDAR Sequences}},
@@ -661,3 +673,4 @@ Please cite the original dataset papers and follow their licences when using Sem
   pages     = {2795--2803},
   year      = {2022}
 }
+```
