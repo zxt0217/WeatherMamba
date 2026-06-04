@@ -3,8 +3,6 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19231095.svg)](https://doi.org/10.5281/zenodo.19231095)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Method Overview <p align="center"> <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba"> </p> The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
-
 Official implementation of the manuscript:
 
 **Reliable Geometry-Aware Domain Generalisation for LiDAR Point Cloud Semantic Segmentation in Adverse Weather**
@@ -33,6 +31,8 @@ The target-domain evaluation includes:
 * Light fog
 * Rain
 * Snow / sleet
+
+## Method Overview <p align="center"> <img src="figures/backbone_final_01.png" width="100%" alt="Overall framework of WeatherMamba"> </p> The overall framework combines local geometric recovery, reliability-aware denoising, hierarchical state-space modelling, and weather-conditioned geometry--reflectance recalibration.
 
 ## Paper Configuration
 
@@ -290,8 +290,6 @@ Place downloaded checkpoint files under:
 checkpoints/
 ```
 
-## Qualitative Results <p align="center"> <img src="figures/Vis_01.png" width="100%" alt="Qualitative comparison under adverse weather"> </p> The qualitative comparison presents representative segmentation results under dense fog, light fog, rain, and snow conditions.
-
 ## Quick Dry Run
 
 A dry run verifies that the dataset, model, and environment can be loaded correctly.
@@ -407,6 +405,9 @@ Expected manuscript result:
 ```text
 SynLiDAR → SemanticSTF: 23.5% mIoU
 ```
+
+
+## Qualitative Results <p align="center"> <img src="figures/Vis_01.png" width="100%" alt="Qualitative comparison under adverse weather"> </p> The qualitative comparison presents representative segmentation results under dense fog, light fog, rain, and snow conditions.
 
 ### 3. Weather-wise evaluation
 
