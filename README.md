@@ -156,8 +156,6 @@ Supported point cloud formats:
 
 For `.bin` point clouds, label files should use the `.label` suffix and follow a SemanticKITTI-style organization.
 
-````markdown
-
 ### 4. Official dataset directory structures
 
 The original datasets should be organized according to their official release formats.
