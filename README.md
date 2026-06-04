@@ -267,7 +267,7 @@ use_radm: true
 use_wgrg: true
 ```
 
-##Checkpoints for Interface Validation
+## Checkpoints for Interface Validation
 
 | Setting                     | Checkpoint                              | Download                                                                | Extraction code |
 | --------------------------- | --------------------------------------- | ----------------------------------------------------------------------- | --------------- |
